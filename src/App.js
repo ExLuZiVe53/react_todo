@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+// ======================App.js==============================
+import React, { Component } from "react";
+import Form from "./components/Form/Form.js";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import TodoList from "./components/TodoList/TodoList.js";
+import initialTodos from "./todos.json";
+
+class App extends Component {
+  state = {
+    todos: initialTodos,
+  };
+
+  deleteTodo = (todoId) => {
+    this.setState((prevState) => ({
+      todos: prevState.todos.filter((todo) => todo.id !== todoId),
+    }));
+  };
+
+  formSubmitHandler = (data) => {
+    console.log(data);
+  };
+
+  render() {
+    const { todos } = this.state;
+    const totalTodoCount = todos.length;
+
+    const completedTodoCount = todos.reduce(
+      (total, todo) => (todo.completed ? total + 1 : total),
+      0
+    );
+    return (
+      <>
+        <div>
+          <p>Total of todo:{totalTodoCount}</p>
+          <p>Number of completed todo:{completedTodoCount}</p>
+        </div>
+        <TodoList todos={todos} onDeleteTodo={this.deleteTodo} />
+        <Form onSubmit={this.onSubmitHandler} />
+      </>
+    );
+  }
 }
 
 export default App;
